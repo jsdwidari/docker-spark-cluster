@@ -1,7 +1,9 @@
 version: "3.3"
 services:
   spark-master:
-    image: cluster-apache-spark:3.0.2
+    build:
+      context: ./
+      dockerfile: Dockerfile
     ports:
       - "9090:8080"
       - "7077:7077"
@@ -12,10 +14,12 @@ services:
       - SPARK_LOCAL_IP=spark-master
       - SPARK_WORKLOAD=master
   spark-worker-a:
-    image: cluster-apache-spark:3.0.2
+    build:
+      context: ./
+      dockerfile: Dockerfile
     ports:
       - "9091:8080"
-      - "7000:7000"
+      - "7003:7000"
     depends_on:
       - spark-master
     environment:
@@ -30,10 +34,12 @@ services:
        - ./apps:/opt/spark-apps
        - ./data:/opt/spark-data
   spark-worker-b:
-    image: cluster-apache-spark:3.0.2
+    build:
+      context: ./
+      dockerfile: Dockerfile
     ports:
       - "9092:8080"
-      - "7001:7000"
+      - "7004:7000"
     depends_on:
       - spark-master
     environment:
@@ -49,8 +55,8 @@ services:
         - ./data:/opt/spark-data
   demo-database:
     image: postgres:11.7-alpine
-    ports: 
+    ports:
       - "5432:5432"
-    environment: 
+    environment:
       - POSTGRES_PASSWORD=casa1234
 
