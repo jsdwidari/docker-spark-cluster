@@ -4,7 +4,7 @@ from pyspark.sql.functions import col,date_format
 def init_spark():
   sql = SparkSession.builder\
     .appName("trip-app")\
-    .config("spark.jars", "/opt/spark-apps/postgresql-42.2.22.jar")\
+    .config("spark.jars", "/opt/apps/postgresql-42.2.22.jar")\
     .getOrCreate()
   sc = sql.sparkContext
   return sql,sc
@@ -16,8 +16,8 @@ def main():
     "password": "casa1234",
     "driver": "org.postgresql.Driver"
   }
-  file = "/opt/spark-data/MTA_2014_08_01.csv"
-  sql,sc = init_spark()
+  file = "/opt/data/MTA-Bus-Time_.2014-08-01.csv"
+  sql, sc = init_spark()
 
   df = sql.read.load(file,format = "csv", inferSchema="true", sep="\t", header="true"
       ) \

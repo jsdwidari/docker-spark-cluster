@@ -1,6 +1,6 @@
 version: "3.3"
 services:
-  spark-master:
+  master:
     build:
       context: ./
       dockerfile: Dockerfile
@@ -8,12 +8,12 @@ services:
       - "9090:8080"
       - "7077:7077"
     volumes:
-       - ./apps:/opt/spark-apps
-       - ./data:/opt/spark-data
+       - ./apps:/opt/apps
+       - ./data:/opt/data
     environment:
-      - SPARK_LOCAL_IP=spark-master
+      - SPARK_LOCAL_IP=master
       - SPARK_WORKLOAD=master
-  spark-worker-a:
+  worker-a:
     build:
       context: ./
       dockerfile: Dockerfile
@@ -21,19 +21,19 @@ services:
       - "9091:8080"
       - "7003:7000"
     depends_on:
-      - spark-master
+      - master
     environment:
-      - SPARK_MASTER=spark://spark-master:7077
+      - SPARK_MASTER=spark://master:7077
       - SPARK_WORKER_CORES=1
       - SPARK_WORKER_MEMORY=1G
       - SPARK_DRIVER_MEMORY=1G
       - SPARK_EXECUTOR_MEMORY=1G
       - SPARK_WORKLOAD=worker
-      - SPARK_LOCAL_IP=spark-worker-a
+      - SPARK_LOCAL_IP=worker-a
     volumes:
-       - ./apps:/opt/spark-apps
-       - ./data:/opt/spark-data
-  spark-worker-b:
+       - ./apps:/opt/apps
+       - ./data:/opt/data
+  worker-b:
     build:
       context: ./
       dockerfile: Dockerfile
@@ -41,18 +41,18 @@ services:
       - "9092:8080"
       - "7004:7000"
     depends_on:
-      - spark-master
+      - master
     environment:
-      - SPARK_MASTER=spark://spark-master:7077
+      - SPARK_MASTER=spark://master:7077
       - SPARK_WORKER_CORES=1
       - SPARK_WORKER_MEMORY=1G
       - SPARK_DRIVER_MEMORY=1G
       - SPARK_EXECUTOR_MEMORY=1G
       - SPARK_WORKLOAD=worker
-      - SPARK_LOCAL_IP=spark-worker-b
+      - SPARK_LOCAL_IP=worker-b
     volumes:
-        - ./apps:/opt/spark-apps
-        - ./data:/opt/spark-data
+        - ./apps:/opt/apps
+        - ./data:/opt/data
   demo-database:
     image: postgres:11.7-alpine
     ports:
